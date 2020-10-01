@@ -1,4 +1,4 @@
-import requests
+import routes
 
 
 class HistoryObject:
@@ -6,148 +6,127 @@ class HistoryObject:
         pass
 
 
+class UserInfo:
+    def __init__(self, username: str, displayName: str, photo: str, email: str):
+        self.username = username
+        self.displayName = displayName
+        self.photo = photo
+        self.email = email
+
+
+class UserPasswordChange:
+    def __init__(self, password: str):
+        self.password = password
+
+
+class ImageProxyRequest:
+    def __init__(self, src):
+        self.src = src
+
+
+class ImageProxyResponse:
+    def __init__(self, src):
+        self.src = src
+
+
+class NotePermissions:
+    owner = ""
+    sharedTo = []  # Username, canEdit
+
+
+class NoteRevisonMetadata:
+    id = ""
+    createdAt = ""
+    length = ""
+
+
+class NoteRevision:
+    content = ""
+    authorship = []
+    patch = []
+
+
+class GistLink:
+    link = ""
+
+
+class DropBoxLink:
+    link = ""
+
+
+class EmailLogin:
+    email = ""
+    password = ""
+
+
+class LdapLogin:
+    username = ""
+    password = ""
+
+
+class OpenIdLogin:
+    openId = ""
+
+
+class ServerVersion:
+    major = 0
+    minor = 0
+    patch = 0
+    preRelease = ""
+    commit = ""
+
+
+class ServerStatus:
+    serverVersion = ServerVersion
+    onlineNotes = 0
+    onlineUsers = 0
+    distinctOnlineUsers = 0
+    notesCount = 0
+    registeredUsers = 0
+    onlineRegisteredUsers = 0
+    distinctOnlineRegisteredUsers = 0
+    isConnectionBusy = False
+    connectionSocketQueueLength = 0
+    isDisconnectBusy = False
+    disconnectSocketQueueLength = 0
+
+
+class NoteMetadata:
+    id = ""
+    alias = ""
+    title = ""
+    description = ""
+    tags = []
+    updateTime = ""
+    updateUser = UserInfo
+    viewCount = 0
+    createTime = ""
+    editedBy = []
+    permissions = NotePermissions
+
+
+class HistoryObject:
+    metadata: NoteMetadata
+    pinned: False
+
+
+class History:
+    history = []  # History Objects
+
+
+class Note:
+    content = ""
+    metadata = NoteMetadata
+    editedByAtPosition = []
+
+
 class Client:
-    def __init__(self, server_address: str, auth_token: str = ""):
-        self.server_address = server_address
-        self.auth_token = auth_token
+    def add_note_to_history(self, note: str, history_object: HistoryObject):
+        client = routes.Client("http://localhost:3000")
+        client.put_me_history_note(note, history_object)
 
-    def get_me(self):
-        result = requests.get(self.server_address + "/me")
-        if result.status_code != 200:
-            return None
+    def create_note(self, text: str, note: str = ""):
+        if note == "":
+            self.post_notes(text)
         else:
-            return result.json()
-
-    def get_me_history(self):
-        result = requests.get(self.server_address + "/me/history")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_me_history_note(self, note: str):
-        result = requests.get(self.server_address + "/me/history" + note)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    # TODO: Define history object
-    def put_me_history_note(self, note: str, history_object: HistoryObject):
-        result = requests.put(self.server_address + "/me/history/" + note, json=history_object)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def delete_me_history_note(self, note: str):
-        result = requests.delete(self.server_address + "/me/history/" + note)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_me_notes(self):
-        result = requests.get(self.server_address + "/me/notes")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def post_notes(self, text: str):
-        result = requests.post(self.server_address + "/me/notes", data=text)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_notes_note(self, note: str):
-        result = requests.get(self.server_address + "/notes/" + note)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def post_notes_note(self, note: str, text: str):
-        result = requests.post(self.server_address + "/notes/" + note, data=text)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def delete_notes_note(self, note: str):
-        result = requests.delete(self.server_address + "/notes/" + note)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def delete_notes_note(self, note: str):
-        result = requests.delete(self.server_address + "/notes/" + note)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def put_notes_note(self, note: str, text: str):
-        result = requests.put(self.server_address + "/notes/" + note, data=text)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def put_notes_note_metadata(self, note: str, metadata):
-        result = requests.put(self.server_address + "/notes/" + note + "/metadata", json=metadata)
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_notes_note_metadata(self, note: str):
-        result = requests.get(self.server_address + "/notes/" + note + "/metadata")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_notes_note_revisions(self, note: str):
-        result = requests.get(self.server_address + "/notes/" + note + "/revisions")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_notes_note_revisions_revision(self, note: str, revision_id: int):
-        result = requests.get(self.server_address + "/notes/" + note + "/revisions/" + str(revision_id))
-        if result.status_code != 200:
-            return None
-        else:
-            return result.json()
-
-    def get_notes_note_content(self, note: str):
-        result = requests.get(self.server_address + "/notes/" + note + "/content")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.text()
-
-    def post_media_upload(self, note: str, file):
-        result = requests.post(self.server_address + "/notes/" + note + "/content")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.text()
-
-    def get_monitoring(self):
-        result = requests.get(self.server_address + "/monitoring")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.text()
-
-    def get_monitoring(self):
-        result = requests.get(self.server_address + "/monitoring/prometheus")
-        if result.status_code != 200:
-            return None
-        else:
-            return result.text()
+            self.post_notes_note(note, text)
