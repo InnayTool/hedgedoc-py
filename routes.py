@@ -121,8 +121,8 @@ class Routes:
         else:
             return result.text
 
-    def post_media_upload(self, note: str, file):
-        result = requests.post(self.server_address + "/notes/" + note + "/content", data=file)
+    def post_media_upload(self, file: str):
+        result = requests.post(self.server_address + "/notes/media", data=file)
         if result.status_code != 200:
             return None
         else:
