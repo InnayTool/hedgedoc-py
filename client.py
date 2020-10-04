@@ -10,9 +10,19 @@ class Client:
     def __init__(self, host: str):
         self.routes = Routes(host)
 
-    def add_note_to_history(self, note: str, history_object: HistoryObject):
-        json_str = json.dumps(history_object)
-        self.routes.put_me_history_note(note, json_str)
+    def get_authorized_user(self) -> UserInfo:
+        result = self.routes.get_me()
+        return get_user_info_from_json(result)
+
+    def get_history(self) -> History:
+        result = self.routes.get_me_history()
+        return get_history_from_json(result)
+
+    def pin_note(self, note: str, pin: bool):
+        result = self.routes.put_me_history_note(note, HistoryUpdateObject(pin).to_json())
+
+    def remove_note_from_history(self, note: str):
+        result = self.routes.delete_me_history_note(note)
 
     def create_note(self, text: str, note: str = "") -> Note:
         if note == "":

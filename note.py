@@ -56,6 +56,11 @@ class HistoryObject(JSONSerializable):
         self.pinned = pinned
 
 
+class HistoryUpdateObject(JSONSerializable):
+    def __init__(self, pin: bool):
+        self.pin = pin
+
+
 class History(JSONSerializable):
     def __init__(self, items: [HistoryObject]):
         self.history = items
