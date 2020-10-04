@@ -67,7 +67,7 @@ class Client:
 
     def post_notes_note(self, note: str, text: str):
         result = requests.post(self.server_address + "/notes/" + note, data=text)
-        if result.status_code != 200:
+        if result.status_code != 201:  # Documentation and Implementation differ: documentation: 200
             return None
         else:
             return result.json()
