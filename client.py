@@ -50,6 +50,9 @@ class Client:
         response = self.routes.put_notes_note(note, text)
         return get_note_from_json(response)
 
+    def write_note_metadata(self, note: str, note_metadata: NoteMetadata):
+        result = self.routes.put_notes_note_metadata(note_metadata.to_json())
+
     def get_revisions(self, note: str) -> [NoteRevisionMetadata]:
         response = self.routes.get_notes_note_revisions(note)
         return get_revisions_metadatas_from_json(response)
