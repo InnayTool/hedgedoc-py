@@ -17,7 +17,7 @@ test_note_metadata = NoteMetadata(
 
 
 def main():
-    hd_client = HedgeDocClient("http://localhost:3000")
+    hd_client = Client("http://localhost:3000")
     note = hd_client.write_note("yolo", "testnote1")
     print(note.content)
     print(note.metadata.title)

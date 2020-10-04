@@ -6,7 +6,7 @@ from note import *
 from extern import *
 
 
-class HedgeDocClient:
+class Client:
     def __init__(self, host: str):
         self.routes = Routes(host)
 
