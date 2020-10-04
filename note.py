@@ -109,15 +109,19 @@ def get_note_from_json(note_json: dict) -> Note:
     return Note(content, metadata, editedByAtPosition)
 
 
-def get_revisions_from_json(revisions_json: dict) -> NoteRevision:
-    content = revisions_json['content']
-    authorship = revisions_json['authorship']
-    patch = revisions_json['patch']
+def get_revision_from_json(revision: dict) -> NoteRevision:
+    content = revision['content']
+    authorship = revision['authorship']
+    patch = revision['patch']
     return NoteRevision(content, authorship, patch)
 
 
-def get_revision_from_json(revision_json: dict) -> NoteRevisionMetadata:
-    revision_id = revision_json['id']
-    createdAt = revision_json['createdAt']
-    length = revision_json['length']
+def get_revisions_metadatas_from_json(revisions_metadatas_json: [dict]) -> [NoteRevisionMetadata]:
+    return map(get_revision_metadata_from_json, revisions_metadatas_json)
+
+
+def get_revision_metadata_from_json(revision_metadata_json: dict) -> NoteRevisionMetadata:
+    revision_id = revision_metadata_json['id']
+    createdAt = revision_metadata_json['createdAt']
+    length = revision_metadata_json['length']
     return NoteRevisionMetadata(revision_id, createdAt, length)
