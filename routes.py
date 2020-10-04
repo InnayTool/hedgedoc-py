@@ -1,7 +1,7 @@
 import requests
 
 
-class Client:
+class Routes:
     def __init__(self, server_address: str, auth_token: str = ""):
         self.server_address = server_address
         self.auth_token = auth_token
